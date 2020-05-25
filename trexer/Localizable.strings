@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  DigiWallet
+ 
+  Copyright © 2020 Digital Fox. All rights reserved.
+*/
+
+"loading" = "Loading...";
+"error" = "An error occured.";
+"last" = "Last";
