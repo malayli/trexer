@@ -32,18 +32,16 @@ struct MarketDetailView: View {
                     VStack(alignment: .leading) {
                         Text("last".localized + ":")
                         Text("24h ago:")
-                        Text("24h volume:")
                         if marketRowViewModel.name.starts(with: "BTC") {
                             Text("Last value:")
                             Text("24h ago value:")
                         }
+                        Text("24h volume:")
                     }
                     VStack(alignment: .leading) {
                         Text("\(marketRowViewModel.last) \(marketRowViewModel.currency)")
                         .font(.headline)
                         Text("\(marketRowViewModel.prevDay) \(marketRowViewModel.currency)")
-                        .font(.headline)
-                        Text("\(marketRowViewModel.baseVolume) \(marketRowViewModel.currency)")
                         .font(.headline)
                         if marketRowViewModel.name.starts(with: "BTC") {
                             Text("\(marketRowViewModel.last * currencyViewModel.value) $")
@@ -51,6 +49,8 @@ struct MarketDetailView: View {
                             Text("\(marketRowViewModel.prevDay * currencyViewModel.value) $")
                             .font(.headline)
                         }
+                        Text("\(marketRowViewModel.baseVolume) \(marketRowViewModel.currency)")
+                        .font(.headline)
                     }
                 }
                 
