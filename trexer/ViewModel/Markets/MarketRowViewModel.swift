@@ -19,7 +19,7 @@ struct MarketRowViewModel {
 
 extension MarketRowViewModel {
     var name: String {
-        return item.summary.marketName
+        item.summary.marketName
     }
     
     var currency: String {
@@ -37,15 +37,15 @@ extension MarketRowViewModel {
     }
     
     var baseVolume: Double {
-        return item.summary.baseVolume
+        item.summary.baseVolume
     }
     
     var prevDay: Double {
-        return item.summary.prevDay
+        item.summary.prevDay
     }
     
     var last: Double {
-        return item.summary.last
+        item.summary.last
     }
     
     var logoURL: URL? {
@@ -63,12 +63,12 @@ extension MarketRowViewModel {
 
 extension MarketRowViewModel: Identifiable {
     var id: String {
-        return item.summary.marketName
+        item.summary.marketName
     }
 }
 
 extension MarketRowViewModel: Equatable {
     static func == (lhs: MarketRowViewModel, rhs: MarketRowViewModel) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 }

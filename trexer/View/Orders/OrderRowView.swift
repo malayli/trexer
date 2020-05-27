@@ -12,16 +12,14 @@ struct OrderRowView: View {
     let todayPricePerUnit: Double
     
     var body: some View {
-        let price = (Double(orderRowViewModel.item.proceeds) ?? 0.0) * (Double(orderRowViewModel.item.quantity) ?? 0)
-        
-        return VStack(alignment: .leading) {
+        VStack(alignment: .leading) {
             Text("\(orderRowViewModel.name)")
-            Text("Price: \(price)")
-            Text("Price per unit: \(orderRowViewModel.item.proceeds)")
+            Text("Price: \(orderRowViewModel.price)")
+            Text("Price per unit: \(orderRowViewModel.pricePerUnit)")
             if orderRowViewModel.orderType == .buy {
                 Text("Today's Price per unit: \(todayPricePerUnit)")
             }
-            Text("Quantity: \(orderRowViewModel.item.quantity)")
+            Text("Quantity: \(orderRowViewModel.quantity)")
             Text("Type: \(orderRowViewModel.orderType.rawValue)").foregroundColor(orderRowViewModel.orderType == .buy ? .green : .red)
         }
     }

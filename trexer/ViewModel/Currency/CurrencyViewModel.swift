@@ -17,6 +17,6 @@ struct CurrencyViewModel {
 
 extension CurrencyViewModel {
     var value: Double {
-        return item.result.bpi.USD.rateFloat
+        item.result.bpi.USD.rateFloat
     }
 }

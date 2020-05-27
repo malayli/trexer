@@ -22,7 +22,6 @@ protocol BittrexFetching {
 
 enum APIVersion {
     case none
-    case v1
     case v3
 }
 
@@ -46,10 +45,6 @@ struct BittrexProvider {
         var urlRequest = URLRequest(url: url)
         
         switch apiVersion {
-        case .v1:
-            if let sign = Crypto.hmac(mixString: url.absoluteString, secretKey: secretKey) {
-                urlRequest.addValue(sign, forHTTPHeaderField: "apisign")
-            }
         case .v3:
             let timeStamp = "\(Int(Date.epochTime))000"
             let uri = url.absoluteString

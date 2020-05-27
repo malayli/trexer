@@ -13,12 +13,12 @@ struct BalanceRowViewModel {
 
 extension BalanceRowViewModel: Identifiable {
     var id: String {
-        return item.currencySymbol
+        item.currencySymbol
     }
 }
 
 extension BalanceRowViewModel: Equatable {
     static func == (lhs: BalanceRowViewModel, rhs: BalanceRowViewModel) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 }

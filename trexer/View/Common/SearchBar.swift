@@ -28,7 +28,7 @@ struct SearchBar: UIViewRepresentable {
     var placeholder: String
 
     func makeCoordinator() -> SearchCoordinator {
-        return SearchCoordinator(text: $text)
+        SearchCoordinator(text: $text)
     }
 
     func makeUIView(context: UIViewRepresentableContext<SearchBar>) -> UISearchBar {
