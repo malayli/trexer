@@ -10,14 +10,14 @@ import Combine
 
 struct MarketRowViewModel {
     private let item: Markets.MarketInfo
-    private let provider: BittrexFetching
     private var disposables = Set<AnyCancellable>()
     
-    init(item: Markets.MarketInfo, provider: BittrexFetching) {
+    init(item: Markets.MarketInfo) {
         self.item = item
-        self.provider = provider
     }
-    
+}
+
+extension MarketRowViewModel {
     var name: String {
         return item.summary.marketName
     }

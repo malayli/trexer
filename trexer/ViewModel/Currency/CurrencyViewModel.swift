@@ -10,11 +10,13 @@ import Foundation
 struct CurrencyViewModel {
     private let item: Currency
     
-    var value: Double {
-        return item.result.bpi.USD.rateFloat
-    }
-    
     init(item: Currency) {
         self.item = item
+    }
+}
+
+extension CurrencyViewModel {
+    var value: Double {
+        return item.result.bpi.USD.rateFloat
     }
 }

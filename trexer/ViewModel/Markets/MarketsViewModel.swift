@@ -39,7 +39,7 @@ extension MarketsViewModel: BittrexProviding {
             (currency, response.result
             .sorted { (m1, m2) -> Bool in
                 m1.summary.last / m1.summary.prevDay < m2.summary.last / m2.summary.prevDay
-            }.map { MarketRowViewModel(item: $0, provider: self.marketsListProvider) })
+            }.map { MarketRowViewModel(item: $0) })
         }
         .receive(on: DispatchQueue.main)
         .sink(receiveCompletion: { [weak self] value in

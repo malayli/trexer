@@ -75,9 +75,8 @@ struct MarketDetailView_Previews: PreviewProvider {
     static var previews: some View {
         let jsonDecoder = JSONDecoder()
         
-        let marketsListProvider = BittrexProviderMock(data: Parser.load("market.json"))
         let markets = try? jsonDecoder.decode(Markets.self, from: Parser.load("market.json"))
-        let marketRowViewModel = MarketRowViewModel(item: markets!.result.first!, provider: marketsListProvider)
+        let marketRowViewModel = MarketRowViewModel(item: markets!.result.first!)
         
         let currency = try? jsonDecoder.decode(Currency.self, from: Parser.load("bitcoin.json"))
         let currencyViewModel: CurrencyViewModel = CurrencyViewModel(item: currency!)

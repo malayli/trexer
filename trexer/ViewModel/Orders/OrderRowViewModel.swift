@@ -11,17 +11,19 @@ struct OrderRowViewModel {
     let item: Orders.Order
 }
 
-extension OrderRowViewModel: Identifiable {
-    var id: String {
-        return item.orderUuid
-    }
-    
+extension OrderRowViewModel {
     var name: String {
         return item.exchange
     }
     
     var orderType: Orders.Order.OrderType {
         return item.orderType
+    }
+}
+
+extension OrderRowViewModel: Identifiable {
+    var id: String {
+        return item.orderUuid
     }
 }
 
