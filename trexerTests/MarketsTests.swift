@@ -50,10 +50,10 @@ final class MarketsTests: XCTestCase {
             assertionFailure("testMarketRowViewModel fails")
             return
         }
-        let rowViewModel1 = MarketRowViewModel(item: markets.result[0], provider: BittrexProviderMock(data: Data()))
+        let rowViewModel1 = MarketRowViewModel(item: markets.result[0])
         XCTAssertEqual(rowViewModel1.id, "BTC-RVN")
         
-        let rowViewModel2 = MarketRowViewModel(item: markets.result[1], provider: BittrexProviderMock(data: Data()))
+        let rowViewModel2 = MarketRowViewModel(item: markets.result[1])
         XCTAssertEqual(rowViewModel2.id, "USD-ZEN")
         
         XCTAssertNotEqual(rowViewModel1, rowViewModel2)
