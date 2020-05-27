@@ -22,7 +22,7 @@ protocol BittrexFetching {
 
 enum APIVersion {
     case none
-    case v1(secretKey: String)
+    case v1
     case v3
 }
 
@@ -46,7 +46,7 @@ struct BittrexProvider {
         var urlRequest = URLRequest(url: url)
         
         switch apiVersion {
-        case .v1(let secretKey):
+        case .v1:
             if let sign = Crypto.hmac(mixString: url.absoluteString, secretKey: secretKey) {
                 urlRequest.addValue(sign, forHTTPHeaderField: "apisign")
             }
@@ -89,7 +89,7 @@ extension BittrexProvider: BittrexFetching {
     }
     
     func orders() -> AnyPublisher<Orders, BittrexError> {
-        fetch(with: URLComponents(string: "\(domain)/api/v1.1/account/getorderhistory?apikey=\(apiKey)&nonce=\(Date.epochTime)")?.url, apiVersion: .v1(secretKey: secretKey))
+        fetch(with: URLComponents(string: "\(domain)/api/v1.1/account/getorderhistory?apikey=\(apiKey)&nonce=\(Date.epochTime)")?.url, apiVersion: .v1)
     }
 }
 
