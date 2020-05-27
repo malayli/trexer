@@ -21,54 +21,54 @@ struct Markets: Codable {
         
         struct Market: Codable {
             enum CodingKeys: String, CodingKey {
-                case MarketCurrency
-                case BaseCurrency
-                case MarketCurrencyLong
-                case BaseCurrencyLong
-                case MinTradeSize
-                case MarketName
+                case marketCurrency = "MarketCurrency"
+                case baseCurrency = "BaseCurrency"
+                case marketCurrencyLong = "MarketCurrencyLong"
+                case baseCurrencyLong = "BaseCurrencyLong"
+                case minTradeSize = "MinTradeSize"
+                case marketName = "MarketName"
                 case logoUrl = "LogoUrl"
             }
             
-            let MarketCurrency: String
-            let BaseCurrency: String
-            let MarketCurrencyLong: String
-            let BaseCurrencyLong: String
-            let MinTradeSize: Double
-            let MarketName: String
+            let marketCurrency: String
+            let baseCurrency: String
+            let marketCurrencyLong: String
+            let baseCurrencyLong: String
+            let minTradeSize: Double
+            let marketName: String
             let logoUrl: String
         }
         
         struct Summary: Codable {
             enum CodingKeys: String, CodingKey {
                 case marketName = "MarketName"
-                case High
-                case Low
-                case Volume
+                case high = "High"
+                case low = "Low"
+                case volume = "Volume"
                 case last = "Last"
                 case baseVolume = "BaseVolume"
-                case TimeStamp
-                case Bid
-                case Ask
-                case OpenBuyOrders
-                case OpenSellOrders
+                case timeStamp = "TimeStamp"
+                case bid = "Bid"
+                case ask = "Ask"
+                case openBuyOrders = "OpenBuyOrders"
+                case openSellOrders = "OpenSellOrders"
                 case prevDay = "PrevDay"
-                case Created
+                case created = "Created"
             }
             
             let marketName: String
-            let High: Double
-            let Low: Double
-            let Volume: Double
+            let high: Double
+            let low: Double
+            let volume: Double
             let last: Double
             let baseVolume: Double
-            let TimeStamp: String
-            let Bid: Double
-            let Ask: Double
-            let OpenBuyOrders: Int
-            let OpenSellOrders: Int
+            let timeStamp: String
+            let bid: Double
+            let ask: Double
+            let openBuyOrders: Int
+            let openSellOrders: Int
             let prevDay: Double
-            let Created: String
+            let created: String
         }
     }
 }
