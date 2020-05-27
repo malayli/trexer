@@ -8,22 +8,24 @@
 import Foundation
 
 struct OrderRowViewModel {
-    let item: Orders.Order
+    let item: Order
 }
 
 extension OrderRowViewModel {
     var name: String {
-        return item.exchange
+        let array = item.marketSymbol.components(separatedBy: "-")
+        let renamed = "\(array[1])-\(array[0])"
+        return renamed
     }
     
-    var orderType: Orders.Order.OrderType {
+    var orderType: Order.OrderType {
         return item.orderType
     }
 }
 
 extension OrderRowViewModel: Identifiable {
     var id: String {
-        return item.orderUuid
+        return item.id
     }
 }
 

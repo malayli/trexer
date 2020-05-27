@@ -22,7 +22,7 @@ extension OrdersViewModel: BittrexProviding {
     func fetch(completion: @escaping () -> Void) -> AnyCancellable {
         provider.orders()
         .map {
-            $0.result.map(OrderRowViewModel.init)
+            $0.map(OrderRowViewModel.init)
         }
         .receive(on: DispatchQueue.main)
         .sink(receiveCompletion: { [weak self] value in

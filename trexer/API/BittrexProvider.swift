@@ -17,7 +17,7 @@ protocol BittrexFetching {
     func bitcoin() -> AnyPublisher<Currency, BittrexError>
     func markets() -> AnyPublisher<Markets, BittrexError>
     func balances() -> AnyPublisher<[Balance], BittrexError>
-    func orders() -> AnyPublisher<Orders, BittrexError>
+    func orders() -> AnyPublisher<[Order], BittrexError>
 }
 
 enum APIVersion {
@@ -88,8 +88,8 @@ extension BittrexProvider: BittrexFetching {
         fetch(with: URLComponents(string: "https://api.bittrex.com/v3/balances")?.url, apiVersion: .v3)
     }
     
-    func orders() -> AnyPublisher<Orders, BittrexError> {
-        fetch(with: URLComponents(string: "\(domain)/api/v1.1/account/getorderhistory?apikey=\(apiKey)&nonce=\(Date.epochTime)")?.url, apiVersion: .v1)
+    func orders() -> AnyPublisher<[Order], BittrexError> {
+        fetch(with: URLComponents(string: "https://api.bittrex.com/v3/orders/closed")?.url, apiVersion: .v3)
     }
 }
 

@@ -12,10 +12,12 @@ struct OrderRowView: View {
     let todayPricePerUnit: Double
     
     var body: some View {
-        VStack(alignment: .leading) {
+        let price = (Double(orderRowViewModel.item.proceeds) ?? 0.0) * (Double(orderRowViewModel.item.quantity) ?? 0)
+        
+        return VStack(alignment: .leading) {
             Text("\(orderRowViewModel.name)")
-            Text("Price: \(orderRowViewModel.item.price)")
-            Text("Price per unit: \(orderRowViewModel.item.pricePerUnit)")
+            Text("Price: \(price)")
+            Text("Price per unit: \(orderRowViewModel.item.proceeds)")
             if orderRowViewModel.orderType == .buy {
                 Text("Today's Price per unit: \(todayPricePerUnit)")
             }
@@ -27,7 +29,7 @@ struct OrderRowView: View {
 
 struct OrderRowView_Previews: PreviewProvider {
     static var previews: some View {
-        let orders = try! JSONDecoder().decode(Orders.self, from: Parser.load("orders.json"))
-        return OrderRowView(orderRowViewModel: OrderRowViewModel(item: orders.result.first!), todayPricePerUnit: 0.0)
+        let orders = try! JSONDecoder().decode([Order].self, from: Parser.load("orders.json"))
+        return OrderRowView(orderRowViewModel: OrderRowViewModel(item: orders.first!), todayPricePerUnit: 0.0)
     }
 }

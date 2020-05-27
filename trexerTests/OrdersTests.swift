@@ -11,20 +11,20 @@ import Combine
 
 final class OrdersTests: XCTestCase {
     func testOrdersDecoding() {
-        guard let orders = try? JSONDecoder().decode(Orders.self, from: Parser.load("orders.json")) else {
+        guard let orders = try? JSONDecoder().decode([Order].self, from: Parser.load("orders.json")) else {
             assertionFailure("testOrdersDecoding fails")
             return
         }
-        XCTAssertEqual(orders.result.count, 3)
-        XCTAssertEqual(orders.result[0].orderType, .buy)
-        XCTAssertEqual(orders.result[1].orderType, .sell)
-        XCTAssertEqual(orders.result[2].orderType, .unknown)
+        XCTAssertEqual(orders.count, 3)
+        XCTAssertEqual(orders[0].orderType, .buy)
+        XCTAssertEqual(orders[1].orderType, .sell)
+        XCTAssertEqual(orders[2].orderType, .buy)
     }
     
     func testOrdersParsing() {
         let data = Parser.load("orders.json")
         
-        let publisher: AnyPublisher<Orders, BittrexError> = Parser.decode(data)
+        let publisher: AnyPublisher<[Order], BittrexError> = Parser.decode(data)
         
         _ = publisher.sink(receiveCompletion: { (error) in
             switch error {
@@ -34,22 +34,22 @@ final class OrdersTests: XCTestCase {
             }
             
         }) { (orders) in
-            XCTAssertEqual(orders.result.count, 3)
-            XCTAssertEqual(orders.result.first?.exchange, "BTC-ETH")
-            XCTAssertEqual(orders.result.first?.orderType, .buy)
+            XCTAssertEqual(orders.count, 3)
+            XCTAssertEqual(orders[0].marketSymbol, "DGB-BTC")
+            XCTAssertEqual(orders[0].orderType, .buy)
         }
     }
     
     func testOrderRowViewModel() {
-        guard let orders = try? JSONDecoder().decode(Orders.self, from: Parser.load("orders.json")) else {
+        guard let orders = try? JSONDecoder().decode([Order].self, from: Parser.load("orders.json")) else {
             assertionFailure("testOrderRowViewModel fails")
             return
         }
-        let rowViewModel1 = OrderRowViewModel(item: orders.result[0])
-        XCTAssertEqual(rowViewModel1.id, "abcd-efgh-ijkl-mnop-pqrs1234")
+        let rowViewModel1 = OrderRowViewModel(item: orders[0])
+        XCTAssertEqual(rowViewModel1.id, "1234-5678-abcd")
         
-        let rowViewModel2 = OrderRowViewModel(item: orders.result[1])
-        XCTAssertEqual(rowViewModel2.id, "abcd-efgh-ijkl-mnop-pqrs5678")
+        let rowViewModel2 = OrderRowViewModel(item: orders[1])
+        XCTAssertEqual(rowViewModel2.id, "1234-5678-efgh")
         
         XCTAssertNotEqual(rowViewModel1, rowViewModel2)
     }
@@ -62,8 +62,8 @@ final class OrdersTests: XCTestCase {
         }
         _ = viewModel.fetch {
             XCTAssertEqual(viewModel.dataSource.count, 3)
-            XCTAssertEqual(viewModel.dataSource.first?.name, "BTC-ETH")
-            XCTAssertEqual(viewModel.dataSource.first?.orderType, .buy)
+            XCTAssertEqual(viewModel.dataSource[0].name, "BTC-DGB")
+            XCTAssertEqual(viewModel.dataSource[0].orderType, .buy)
         }
     }
 }
