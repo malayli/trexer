@@ -46,7 +46,7 @@ struct BittrexProvider {
         
         switch apiVersion {
         case .v3:
-            let timeStamp = "\(Int(Date.epochTime))000"
+            let timeStamp = "\(Int(Date.epochTimeInMilliseconds))"
             let uri = url.absoluteString
             let contentHash = Crypto.sha512Hex(string: "")
             let preSign = [timeStamp, uri, "GET", contentHash].joined()
@@ -89,7 +89,7 @@ extension BittrexProvider: BittrexFetching {
 }
 
 private extension Date {
-    static var epochTime: Double {
-        floor(NSDate().timeIntervalSince1970)
+    static var epochTimeInMilliseconds: Double {
+        NSDate().timeIntervalSince1970 * 1000.0
     }
 }
