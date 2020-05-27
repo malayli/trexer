@@ -22,7 +22,7 @@ extension BalancesViewModel: BittrexProviding {
     func fetch(completion: @escaping () -> Void) -> AnyCancellable {
         provider.balances()
         .map {
-            $0.result.map(BalanceRowViewModel.init)
+            $0.map(BalanceRowViewModel.init)
         }
         .receive(on: DispatchQueue.main)
         .sink(receiveCompletion: { [weak self] value in

@@ -16,8 +16,14 @@ enum BittrexError: Error {
 protocol BittrexFetching {
     func bitcoin() -> AnyPublisher<Currency, BittrexError>
     func markets() -> AnyPublisher<Markets, BittrexError>
-    func balances() -> AnyPublisher<Balances, BittrexError>
+    func balances() -> AnyPublisher<[Balance], BittrexError>
     func orders() -> AnyPublisher<Orders, BittrexError>
+}
+
+enum APIVersion {
+    case none
+    case v1(secretKey: String)
+    case v3
 }
 
 struct BittrexProvider {
@@ -32,17 +38,30 @@ struct BittrexProvider {
         self.secretKey = secretKey
     }
     
-    private func fetch<T>(with url: URL?, secretKey: String? = nil) -> AnyPublisher<T, BittrexError> where T: Decodable {
+    private func fetch<T>(with url: URL?, apiVersion: APIVersion) -> AnyPublisher<T, BittrexError> where T: Decodable {
         guard let url = url else {
             return Fail(error: .network(description: "Couldn't create URL")).eraseToAnyPublisher()
         }
         
         var urlRequest = URLRequest(url: url)
         
-        if let secretKey = secretKey,
-            let sign = Crypto.hmac(mixString: url.absoluteString, secretKey: secretKey) {
-            urlRequest = URLRequest(url: url)
-            urlRequest.addValue(sign, forHTTPHeaderField: "apisign")
+        switch apiVersion {
+        case .v1(let secretKey):
+            if let sign = Crypto.hmac(mixString: url.absoluteString, secretKey: secretKey) {
+                urlRequest.addValue(sign, forHTTPHeaderField: "apisign")
+            }
+        case .v3:
+            let timeStamp = "\(Int(Date.epochTime))000"
+            let uri = url.absoluteString
+            let contentHash = Crypto.sha512Hex(string: "")
+            let preSign = [timeStamp, uri, "GET", contentHash].joined()
+            let signature = Crypto.hmac(mixString: preSign, secretKey: secretKey) ?? ""
+            
+            urlRequest.addValue(apiKey, forHTTPHeaderField: "Api-Key")
+            urlRequest.addValue(timeStamp, forHTTPHeaderField: "Api-Timestamp")
+            urlRequest.addValue(contentHash, forHTTPHeaderField: "Api-Content-Hash")
+            urlRequest.addValue(signature, forHTTPHeaderField: "Api-Signature")
+        case .none: ()
         }
         
         return session.dataTaskPublisher(for: urlRequest)
@@ -58,19 +77,19 @@ struct BittrexProvider {
 
 extension BittrexProvider: BittrexFetching {
     func bitcoin() -> AnyPublisher<Currency, BittrexError> {
-        fetch(with: URLComponents(string: "\(domain)/api/v2.0/pub/currencies/GetBTCPrice")?.url)
+        fetch(with: URLComponents(string: "\(domain)/api/v2.0/pub/currencies/GetBTCPrice")?.url, apiVersion: .none)
     }
     
     func markets() -> AnyPublisher<Markets, BittrexError> {
-        fetch(with: URLComponents(string: "\(domain)/api/v2.0/pub/Markets/GetMarketSummaries")?.url)
+        fetch(with: URLComponents(string: "\(domain)/api/v2.0/pub/Markets/GetMarketSummaries")?.url, apiVersion: .none)
     }
     
-    func balances() -> AnyPublisher<Balances, BittrexError> {
-        fetch(with: URLComponents(string: "\(domain)/api/v1.1/account/getbalances?apikey=\(apiKey)&nonce=\(Date.epochTime)")?.url, secretKey: secretKey)
+    func balances() -> AnyPublisher<[Balance], BittrexError> {
+        fetch(with: URLComponents(string: "https://api.bittrex.com/v3/balances")?.url, apiVersion: .v3)
     }
     
     func orders() -> AnyPublisher<Orders, BittrexError> {
-        fetch(with: URLComponents(string: "\(domain)/api/v1.1/account/getorderhistory?apikey=\(apiKey)&nonce=\(Date.epochTime)")?.url, secretKey: secretKey)
+        fetch(with: URLComponents(string: "\(domain)/api/v1.1/account/getorderhistory?apikey=\(apiKey)&nonce=\(Date.epochTime)")?.url, apiVersion: .v1(secretKey: secretKey))
     }
 }
 

@@ -11,17 +11,17 @@ import Combine
 
 final class BalancesTests: XCTestCase {
     func testBalancesDecoding() {
-        guard let balances = try? JSONDecoder().decode(Balances.self, from: Parser.load("balances.json")) else {
+        guard let balances = try? JSONDecoder().decode([Balance].self, from: Parser.load("balances.json")) else {
             assertionFailure("testBalancesDecoding fails")
             return
         }
-        XCTAssertEqual(balances.result.count, 3)
+        XCTAssertEqual(balances.count, 3)
     }
     
     func testBalancesParsing() {
         let data = Parser.load("balances.json")
         
-        let publisher: AnyPublisher<Balances, BittrexError> = Parser.decode(data)
+        let publisher: AnyPublisher<[Balance], BittrexError> = Parser.decode(data)
         
         _ = publisher.sink(receiveCompletion: { (error) in
             switch error {
@@ -31,20 +31,20 @@ final class BalancesTests: XCTestCase {
             }
             
         }) { (balances) in
-            XCTAssertEqual(balances.result.count, 3)
-            XCTAssertEqual(balances.result.first?.currency, "BTC")
+            XCTAssertEqual(balances.count, 3)
+            XCTAssertEqual(balances.first?.currencySymbol, "BTC")
         }
     }
     
     func testBalanceRowViewModel() {
-        guard let balances = try? JSONDecoder().decode(Balances.self, from: Parser.load("balances.json")) else {
+        guard let balances = try? JSONDecoder().decode([Balance].self, from: Parser.load("balances.json")) else {
             assertionFailure("testBalanceRowViewModel fails")
             return
         }
-        let balanceRowViewModel1 = BalanceRowViewModel(item: balances.result[0])
+        let balanceRowViewModel1 = BalanceRowViewModel(item: balances[0])
         XCTAssertEqual(balanceRowViewModel1.id, "BTC")
         
-        let balanceRowViewModel2 = BalanceRowViewModel(item: balances.result[1])
+        let balanceRowViewModel2 = BalanceRowViewModel(item: balances[1])
         XCTAssertEqual(balanceRowViewModel2.id, "MONA")
         
         XCTAssertNotEqual(balanceRowViewModel1, balanceRowViewModel2)

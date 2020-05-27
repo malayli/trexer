@@ -12,15 +12,15 @@ struct BalanceRowView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("\(balanceRowViewModel.item.currency)")
-            Text("Balance: \(balanceRowViewModel.item.balance)")
+            Text("\(balanceRowViewModel.item.currencySymbol)")
+            Text("Balance: \(balanceRowViewModel.item.total)")
         }
     }
 }
 
 struct BalanceRowView_Previews: PreviewProvider {
     static var previews: some View {
-        let balances = try! JSONDecoder().decode(Balances.self, from: Parser.load("balances.json"))
-        return BalanceRowView(balanceRowViewModel: BalanceRowViewModel(item: balances.result[0]))
+        let balances = try! JSONDecoder().decode([Balance].self, from: Parser.load("balances.json"))
+        return BalanceRowView(balanceRowViewModel: BalanceRowViewModel(item: balances[0]))
     }
 }

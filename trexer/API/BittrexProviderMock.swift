@@ -37,8 +37,8 @@ extension BittrexProviderMock: BittrexFetching {
         }.eraseToAnyPublisher()
     }
     
-    func balances() -> AnyPublisher<Balances, BittrexError> {
-        let publisher: AnyPublisher<Balances, BittrexError> = Parser.decode(data)
+    func balances() -> AnyPublisher<[Balance], BittrexError> {
+        let publisher: AnyPublisher<[Balance], BittrexError> = Parser.decode(data)
         return publisher.eraseToAnyPublisher()
     }
     

@@ -8,12 +8,12 @@
 import Foundation
 
 struct BalanceRowViewModel {
-    let item: Balances.Balance
+    let item: Balance
 }
 
 extension BalanceRowViewModel: Identifiable {
     var id: String {
-        return item.currency
+        return item.currencySymbol
     }
 }
 
