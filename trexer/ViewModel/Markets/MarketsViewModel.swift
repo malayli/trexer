@@ -36,9 +36,11 @@ extension MarketsViewModel: BittrexProviding {
     func fetch(completion: @escaping () -> Void) -> AnyCancellable {
         Publishers.Zip(bitcoinProvider.bitcoin(), marketsListProvider.markets())
         .map { (currency, response) -> (Currency, [MarketRowViewModel]) in
-            (currency, response.result
-            .sorted { (m1, m2) -> Bool in
-                m1.summary.last / m1.summary.prevDay < m2.summary.last / m2.summary.prevDay
+            (currency, response.result.sorted { (m1, m2) -> Bool in
+                let satoshi = 0.00000001
+                let result1 = m1.summary.last / (m1.summary.prevDay > 0.0 ? m1.summary.prevDay : satoshi)
+                let result2 = m2.summary.last / (m2.summary.prevDay > 0.0 ? m2.summary.prevDay : satoshi)
+                return result1 < result2
             }.map { MarketRowViewModel(item: $0) })
         }
         .receive(on: DispatchQueue.main)
