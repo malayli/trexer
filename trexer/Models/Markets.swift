@@ -49,7 +49,9 @@ extension Markets.Summary: Identifiable {
     var id: String {
         marketName
     }
-    
+}
+
+extension Markets.Summary {
     var rate: Double {
         guard let last = last, let prevDay = prevDay, prevDay > 0.0 else {
             return 0.0

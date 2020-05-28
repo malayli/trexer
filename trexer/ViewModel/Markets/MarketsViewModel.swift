@@ -43,8 +43,10 @@ extension MarketsViewModel: BittrexProviding {
             ($0, $1, $2.result.sorted(by: { (m1, m2) -> Bool in
                 m1.rate < m2.rate
             }).map { item -> MarketRowViewModel in
-                MarketRowViewModel(item: item, currency: self.currencies?.first(where: {
-                    item.marketName.contains($0.symbol)
+                let array = item.marketName.components(separatedBy: "-")
+                
+                return MarketRowViewModel(item: item, currency: self.currencies?.first(where: {
+                    array[1].contains($0.symbol)
                 }))
             })
         }

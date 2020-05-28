@@ -18,7 +18,7 @@ struct OrderRowView: View {
             if orderRowViewModel.orderType == .buy {
                 Text("Today's Price per unit: \(todayPricePerUnit)")
                 
-                todayPricePerUnit < orderRowViewModel.pricePerUnit ? Text("- Don't sell! -") : Text("- Sell! -")
+                todayPricePerUnit < orderRowViewModel.pricePerUnit ? Text("- Don't sell! -") : Text("- SELL NOW! You'll gain " + String(format: "%.2f", orderRowViewModel.pricePerUnit / todayPricePerUnit) + "% -")
             }
             Text("Quantity: \(orderRowViewModel.quantity)")
             Text("Type: \(orderRowViewModel.orderType.rawValue)").foregroundColor(orderRowViewModel.orderType == .buy ? .green : .red)
