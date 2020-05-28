@@ -14,10 +14,11 @@ struct OrderRowView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("\(orderRowViewModel.name)")
-            Text("Price: \(orderRowViewModel.price)")
             Text("Price per unit: \(orderRowViewModel.pricePerUnit)")
             if orderRowViewModel.orderType == .buy {
                 Text("Today's Price per unit: \(todayPricePerUnit)")
+                
+                todayPricePerUnit < orderRowViewModel.pricePerUnit ? Text("- Don't sell! -") : Text("- Sell! -")
             }
             Text("Quantity: \(orderRowViewModel.quantity)")
             Text("Type: \(orderRowViewModel.orderType.rawValue)").foregroundColor(orderRowViewModel.orderType == .buy ? .green : .red)
