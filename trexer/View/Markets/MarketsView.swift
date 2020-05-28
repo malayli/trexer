@@ -19,7 +19,9 @@ struct MarketsView: View {
     }
     
     var body: some View {
-        NavigationView {
+        let tickerViewModel = TickerViewModel(item: self.marketsViewModel.ticker)
+        
+        return NavigationView {
             VStack {
                 SearchBar(text: $searchText, placeholder: "Search")
                 List {
@@ -29,9 +31,11 @@ struct MarketsView: View {
                     } else {
                         ForEach(marketsViewModel.dataSource.filter {
                             searchText.isEmpty ? true : $0.name.contains(searchText.uppercased())
+                            
                         }) { rowViewModel in
-                            NavigationLink(destination: MarketDetailView(marketRowViewModel: rowViewModel, currencyViewModel: CurrencyViewModel(item: self.marketsViewModel.currency!))) {
-                                MarketRowView(marketRowViewModel: rowViewModel, currencyViewModel: CurrencyViewModel(item: self.marketsViewModel.currency!))
+                            NavigationLink(destination: MarketDetailView(marketRowViewModel: rowViewModel, tickerViewModel: tickerViewModel)) {
+                                
+                                MarketRowView(marketRowViewModel: rowViewModel, tickerViewModel: tickerViewModel)
                             }
                         }
                     }

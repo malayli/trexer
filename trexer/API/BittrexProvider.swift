@@ -14,8 +14,9 @@ enum BittrexError: Error {
 }
 
 protocol BittrexFetching {
-    func bitcoin() -> AnyPublisher<Currency, BittrexError>
+    func bitcoin() -> AnyPublisher<Ticker, BittrexError>
     func markets() -> AnyPublisher<Markets, BittrexError>
+    func currencies() -> AnyPublisher<[Currency], BittrexError>
     func balances() -> AnyPublisher<[Balance], BittrexError>
     func orders() -> AnyPublisher<[Order], BittrexError>
 }
@@ -69,12 +70,16 @@ struct BittrexProvider {
 }
 
 extension BittrexProvider: BittrexFetching {
-    func bitcoin() -> AnyPublisher<Currency, BittrexError> {
+    func bitcoin() -> AnyPublisher<Ticker, BittrexError> {
         fetch(with: URLComponents(string: "https://\(domain)/api/v1.1/public/getticker?market=USD-BTC")?.url)
     }
     
     func markets() -> AnyPublisher<Markets, BittrexError> {
         fetch(with: URLComponents(string: "https://\(domain)/api/v1.1/public/getmarketsummaries")?.url)
+    }
+    
+    func currencies() -> AnyPublisher<[Currency], BittrexError> {
+        fetch(with: URLComponents(string: "https://\(domain)/v3/currencies")?.url)
     }
     
     func balances() -> AnyPublisher<[Balance], BittrexError> {

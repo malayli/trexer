@@ -12,13 +12,15 @@ import Combine
 final class BalancesTests: XCTestCase {
     func testBalancesDecoding() {
         guard let balances = try? JSONDecoder().decode([Balance].self, from: Parser.load("balances.json")) else {
-            assertionFailure("testBalancesDecoding fails")
+            XCTFail("testBalancesDecoding fails")
             return
         }
         XCTAssertEqual(balances.count, 3)
     }
     
     func testBalancesParsing() {
+        let expectation = XCTestExpectation(description: "")
+        
         let data = Parser.load("balances.json")
         
         let publisher: AnyPublisher<[Balance], BittrexError> = Parser.decode(data)
@@ -33,12 +35,15 @@ final class BalancesTests: XCTestCase {
         }) { (balances) in
             XCTAssertEqual(balances.count, 3)
             XCTAssertEqual(balances.first?.currencySymbol, "BTC")
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 10.0)
     }
     
     func testBalanceRowViewModel() {
         guard let balances = try? JSONDecoder().decode([Balance].self, from: Parser.load("balances.json")) else {
-            assertionFailure("testBalanceRowViewModel fails")
+            XCTFail("testBalanceRowViewModel fails")
             return
         }
         let balanceRowViewModel1 = BalanceRowViewModel(item: balances[0])
@@ -55,7 +60,7 @@ final class BalancesTests: XCTestCase {
         
         let container = DependenciesContainerMock()
         guard let viewModel: BalancesViewModel = container.resolve(BalancesViewModel.self) else {
-            assertionFailure("testBalancesDecoding fails")
+            XCTFail("testBalancesDecoding fails")
             return
         }
         _ = viewModel.fetch {

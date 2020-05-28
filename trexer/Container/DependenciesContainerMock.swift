@@ -12,11 +12,12 @@ final class DependenciesContainerMock: Container<Any> {
         super.init()
         
         let marketsListProvider = BittrexProviderMock(data: Parser.load("market.json"))
-        let bitcoinProvider = BittrexProviderMock(data: Parser.load("bitcoin.json"))
+        let bitcoinProvider = BittrexProviderMock(data: Parser.load("ticker.json"))
+        let currenciesProvider = BittrexProviderMock(data: Parser.load("currency.json"))
         let ordersProvider = BittrexProviderMock(data: Parser.load("orders.json"))
         let balancesProvider = BittrexProviderMock(data: Parser.load("balances.json"))
         
-        let marketsViewModel = MarketsViewModel(marketsListProvider: marketsListProvider, bitcoinProvider: bitcoinProvider)
+        let marketsViewModel = MarketsViewModel(marketsListProvider: marketsListProvider, bitcoinProvider: bitcoinProvider, currenciesProvider: currenciesProvider)
         let ordersViewModel = OrdersViewModel(provider: ordersProvider)
         let balancesViewModel = BalancesViewModel(provider: balancesProvider)
         

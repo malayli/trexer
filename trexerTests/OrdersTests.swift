@@ -12,7 +12,7 @@ import Combine
 final class OrdersTests: XCTestCase {
     func testOrdersDecoding() {
         guard let orders = try? JSONDecoder().decode([Order].self, from: Parser.load("orders.json")) else {
-            assertionFailure("testOrdersDecoding fails")
+            XCTFail("testOrdersDecoding fails")
             return
         }
         XCTAssertEqual(orders.count, 3)
@@ -22,6 +22,8 @@ final class OrdersTests: XCTestCase {
     }
     
     func testOrdersParsing() {
+        let expectation = XCTestExpectation(description: "")
+        
         let data = Parser.load("orders.json")
         
         let publisher: AnyPublisher<[Order], BittrexError> = Parser.decode(data)
@@ -37,12 +39,15 @@ final class OrdersTests: XCTestCase {
             XCTAssertEqual(orders.count, 3)
             XCTAssertEqual(orders[0].marketSymbol, "DGB-BTC")
             XCTAssertEqual(orders[0].orderType, .buy)
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 10.0)
     }
     
     func testOrderRowViewModel() {
         guard let orders = try? JSONDecoder().decode([Order].self, from: Parser.load("orders.json")) else {
-            assertionFailure("testOrderRowViewModel fails")
+            XCTFail("testOrderRowViewModel fails")
             return
         }
         let rowViewModel1 = OrderRowViewModel(item: orders[0])
@@ -59,7 +64,7 @@ final class OrdersTests: XCTestCase {
         
         let container = DependenciesContainerMock()
         guard let viewModel: OrdersViewModel = container.resolve(OrdersViewModel.self) else {
-            assertionFailure("testOrdersViewModel fails")
+            XCTFail("testOrdersViewModel fails")
             return
         }
         _ = viewModel.fetch {

@@ -10,10 +10,12 @@ import Combine
 
 struct MarketRowViewModel {
     private let item: Markets.Summary
+    private let currency: Currency?
     private var disposables = Set<AnyCancellable>()
     
-    init(item: Markets.Summary) {
+    init(item: Markets.Summary, currency: Currency?) {
         self.item = item
+        self.currency = currency
     }
 }
 
@@ -22,7 +24,7 @@ extension MarketRowViewModel {
         item.marketName
     }
     
-    var currency: String {
+    var currencySymbol: String {
         let array = name.components(separatedBy: "-")
         
         if array[0] == "USD" {
@@ -36,6 +38,13 @@ extension MarketRowViewModel {
         }
     }
     
+    var logoURL: URL? {
+        guard let urlString = currency?.logoUrl else {
+            return nil
+        }
+        return URL(string: urlString)
+    }
+    
     var baseVolume: Double {
         item.baseVolume ?? 0.0
     }
@@ -46,10 +55,6 @@ extension MarketRowViewModel {
     
     var last: Double {
         item.last ?? 0.0
-    }
-    
-    var logoURL: URL? {
-        URL(string: "")
     }
     
     var rateText: Text {

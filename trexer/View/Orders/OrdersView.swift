@@ -24,7 +24,7 @@ struct OrdersView: View {
     private func marketDetailView(_ rowViewModel: OrderRowViewModel) -> MarketDetailView {
         let index = marketsViewModel.index(for: rowViewModel.name)
         
-        return MarketDetailView(marketRowViewModel: marketsViewModel.dataSource[index], currencyViewModel: CurrencyViewModel(item: marketsViewModel.currency!))
+        return MarketDetailView(marketRowViewModel: marketsViewModel.dataSource[index], tickerViewModel: TickerViewModel(item: marketsViewModel.ticker))
     }
     
     var body: some View {

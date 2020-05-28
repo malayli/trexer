@@ -10,14 +10,6 @@ import XCTest
 import Combine
 
 final class MarketsTests: XCTestCase {
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-    
     func testMarketsDecoding() {
         do {
             let markets = try JSONDecoder().decode(Markets.self, from: Parser.load("market.json"))
@@ -26,11 +18,13 @@ final class MarketsTests: XCTestCase {
             
         } catch {
             print(error)
-            assertionFailure("testMarketRowViewModel fails")
+            XCTFail("testMarketRowViewModel fails")
         }
     }
     
     func testMarketsParsing() {
+        let expectation = XCTestExpectation(description: "")
+        
         let data = Parser.load("market.json")
         
         let publisher: AnyPublisher<Markets, BittrexError> = Parser.decode(data)
@@ -45,24 +39,27 @@ final class MarketsTests: XCTestCase {
         }) { (marketsLits) in
             XCTAssertEqual(marketsLits.result.count, 441)
             XCTAssertEqual(marketsLits.result.first?.id, "BTC-HYC")
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 10.0)
     }
     
     func testMarketRowViewModel() {
         do {
             let markets = try JSONDecoder().decode(Markets.self, from: Parser.load("market.json"))
             
-            let rowViewModel1 = MarketRowViewModel(item: markets.result[0])
+            let rowViewModel1 = MarketRowViewModel(item: markets.result[0], currency: nil)
             XCTAssertEqual(rowViewModel1.id, "BTC-HYC")
             
-            let rowViewModel2 = MarketRowViewModel(item: markets.result[1])
+            let rowViewModel2 = MarketRowViewModel(item: markets.result[1], currency: nil)
             XCTAssertEqual(rowViewModel2.id, "ETH-ENG")
             
             XCTAssertNotEqual(rowViewModel1, rowViewModel2)
             
         } catch {
             print(error)
-            assertionFailure("testMarketRowViewModel fails")
+            XCTFail("testMarketRowViewModel fails")
         }
     }
     
@@ -71,11 +68,11 @@ final class MarketsTests: XCTestCase {
         
         let container = DependenciesContainerMock()
         guard let viewModel: MarketsViewModel = container.resolve(MarketsViewModel.self) else {
-            assertionFailure("testMarketsViewModel fails")
+            XCTFail("testMarketsViewModel fails")
             return
         }
         _ = viewModel.fetch {
-            XCTAssertEqual(CurrencyViewModel(item: viewModel.currency!).value, 9465.952)
+            XCTAssertEqual(TickerViewModel(item: viewModel.ticker).value, 9465.952)
             XCTAssertEqual(viewModel.dataSource.count, 441)
             XCTAssertEqual(viewModel.dataSource.first?.id, "BTC-VID")
             expectation.fulfill()

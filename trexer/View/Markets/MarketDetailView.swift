@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MarketDetailView: View {
     let marketRowViewModel: MarketRowViewModel
-    let currencyViewModel: CurrencyViewModel
+    let tickerViewModel: TickerViewModel
     private let webPageURLString = "https://global.bittrex.com/Market/Index?MarketName="
     
     var body: some View {
@@ -39,17 +39,17 @@ struct MarketDetailView: View {
                         Text("24h volume:")
                     }
                     VStack(alignment: .leading) {
-                        Text("\(marketRowViewModel.last) \(marketRowViewModel.currency)")
+                        Text("\(marketRowViewModel.last) \(marketRowViewModel.currencySymbol)")
                         .font(.headline)
-                        Text("\(marketRowViewModel.prevDay) \(marketRowViewModel.currency)")
+                        Text("\(marketRowViewModel.prevDay) \(marketRowViewModel.currencySymbol)")
                         .font(.headline)
                         if marketRowViewModel.name.starts(with: "BTC") {
-                            Text("\(marketRowViewModel.last * currencyViewModel.value) $")
+                            Text("\(marketRowViewModel.last * tickerViewModel.value) $")
                             .font(.headline)
-                            Text("\(marketRowViewModel.prevDay * currencyViewModel.value) $")
+                            Text("\(marketRowViewModel.prevDay * tickerViewModel.value) $")
                             .font(.headline)
                         }
-                        Text("\(marketRowViewModel.baseVolume) \(marketRowViewModel.currency)")
+                        Text("\(marketRowViewModel.baseVolume) \(marketRowViewModel.currencySymbol)")
                         .font(.headline)
                     }
                 }
@@ -75,12 +75,14 @@ struct MarketDetailView_Previews: PreviewProvider {
     static var previews: some View {
         let jsonDecoder = JSONDecoder()
         
+        let currencies = try? jsonDecoder.decode([Currency].self, from: Parser.load("currency.json"))
+        
         let markets = try? jsonDecoder.decode(Markets.self, from: Parser.load("market.json"))
-        let marketRowViewModel = MarketRowViewModel(item: markets!.result.first!)
+        let marketRowViewModel = MarketRowViewModel(item: markets!.result.first!, currency: currencies?.first)
         
-        let currency = try? jsonDecoder.decode(Currency.self, from: Parser.load("bitcoin.json"))
-        let currencyViewModel: CurrencyViewModel = CurrencyViewModel(item: currency!)
+        let ticker = try? jsonDecoder.decode(Ticker.self, from: Parser.load("ticker.json"))
+        let tickerViewModel: TickerViewModel = TickerViewModel(item: ticker)
         
-        return MarketDetailView(marketRowViewModel: marketRowViewModel, currencyViewModel: currencyViewModel)
+        return MarketDetailView(marketRowViewModel: marketRowViewModel, tickerViewModel: tickerViewModel)
     }
 }

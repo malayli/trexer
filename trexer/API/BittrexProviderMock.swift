@@ -23,8 +23,8 @@ extension BittrexProviderMock: BittrexFetching {
         self.data = Data()
     }
     
-    func bitcoin() -> AnyPublisher<Currency, BittrexError> {
-        let publisher: AnyPublisher<Currency, BittrexError> = Parser.decode(data)
+    func bitcoin() -> AnyPublisher<Ticker, BittrexError> {
+        let publisher: AnyPublisher<Ticker, BittrexError> = Parser.decode(data)
         return publisher.mapError { error in
             .network(description: error.localizedDescription)
         }.eraseToAnyPublisher()
@@ -35,6 +35,11 @@ extension BittrexProviderMock: BittrexFetching {
         return publisher.mapError { error in
             .network(description: error.localizedDescription)
         }.eraseToAnyPublisher()
+    }
+    
+    func currencies() -> AnyPublisher<[Currency], BittrexError> {
+        let publisher: AnyPublisher<[Currency], BittrexError> = Parser.decode(data)
+        return publisher.eraseToAnyPublisher()
     }
     
     func balances() -> AnyPublisher<[Balance], BittrexError> {

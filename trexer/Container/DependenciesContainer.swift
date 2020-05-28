@@ -14,7 +14,7 @@ final class DependenciesContainer: Container<Any> {
                                        apiKey: Credentials.apiKey,
                                        secretKey: Credentials.secretKey)
         
-        let marketsViewModel = MarketsViewModel(marketsListProvider: provider, bitcoinProvider: provider)
+        let marketsViewModel = MarketsViewModel(marketsListProvider: provider, bitcoinProvider: provider, currenciesProvider: provider)
         let ordersViewModel = OrdersViewModel(provider: provider)
         let balancesViewModel = BalancesViewModel(provider: provider)
         
