@@ -37,15 +37,14 @@ struct BittrexProvider {
         self.secretKey = secretKey
     }
     
-    private func fetch<T>(with url: URL?, apiVersion: APIVersion) -> AnyPublisher<T, BittrexError> where T: Decodable {
+    private func fetch<T>(with url: URL?, isSigned: Bool = false) -> AnyPublisher<T, BittrexError> where T: Decodable {
         guard let url = url else {
             return Fail(error: .network(description: "Couldn't create URL")).eraseToAnyPublisher()
         }
         
         var urlRequest = URLRequest(url: url)
         
-        switch apiVersion {
-        case .v3:
+        if isSigned {
             let timeStamp = "\(Int(Date.epochTimeInMilliseconds))"
             let uri = url.absoluteString
             let contentHash = Crypto.sha512Hex(string: "")
@@ -56,7 +55,6 @@ struct BittrexProvider {
             urlRequest.addValue(timeStamp, forHTTPHeaderField: "Api-Timestamp")
             urlRequest.addValue(contentHash, forHTTPHeaderField: "Api-Content-Hash")
             urlRequest.addValue(signature, forHTTPHeaderField: "Api-Signature")
-        case .none: ()
         }
         
         return session.dataTaskPublisher(for: urlRequest)
@@ -72,19 +70,19 @@ struct BittrexProvider {
 
 extension BittrexProvider: BittrexFetching {
     func bitcoin() -> AnyPublisher<Currency, BittrexError> {
-        fetch(with: URLComponents(string: "\(domain)/api/v2.0/pub/currencies/GetBTCPrice")?.url, apiVersion: .none)
+        fetch(with: URLComponents(string: "\(domain)/api/v2.0/pub/currencies/GetBTCPrice")?.url)
     }
     
     func markets() -> AnyPublisher<Markets, BittrexError> {
-        fetch(with: URLComponents(string: "https://api.bittrex.com/api/v1.1/public/getmarketsummaries")?.url, apiVersion: .none)
+        fetch(with: URLComponents(string: "https://api.bittrex.com/api/v1.1/public/getmarketsummaries")?.url)
     }
     
     func balances() -> AnyPublisher<[Balance], BittrexError> {
-        fetch(with: URLComponents(string: "https://api.bittrex.com/v3/balances")?.url, apiVersion: .v3)
+        fetch(with: URLComponents(string: "https://api.bittrex.com/v3/balances")?.url, isSigned: true)
     }
     
     func orders() -> AnyPublisher<[Order], BittrexError> {
-        fetch(with: URLComponents(string: "https://api.bittrex.com/v3/orders/closed")?.url, apiVersion: .v3)
+        fetch(with: URLComponents(string: "https://api.bittrex.com/v3/orders/closed")?.url, isSigned: true)
     }
 }
 
