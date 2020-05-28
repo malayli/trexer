@@ -29,7 +29,7 @@ struct BittrexProvider {
     private let session: URLSession
     private let apiKey: String
     private let secretKey: String
-    private let domain = "https://bittrex.com"
+    private let domain = "api.bittrex.com"
     
     init(_ urlSession: URLSession = URLSession.shared, apiKey: String, secretKey: String) {
         self.session = urlSession
@@ -70,19 +70,19 @@ struct BittrexProvider {
 
 extension BittrexProvider: BittrexFetching {
     func bitcoin() -> AnyPublisher<Currency, BittrexError> {
-        fetch(with: URLComponents(string: "\(domain)/api/v2.0/pub/currencies/GetBTCPrice")?.url)
+        fetch(with: URLComponents(string: "https://\(domain)/api/v1.1/public/getticker?market=USD-BTC")?.url)
     }
     
     func markets() -> AnyPublisher<Markets, BittrexError> {
-        fetch(with: URLComponents(string: "https://api.bittrex.com/api/v1.1/public/getmarketsummaries")?.url)
+        fetch(with: URLComponents(string: "https://\(domain)/api/v1.1/public/getmarketsummaries")?.url)
     }
     
     func balances() -> AnyPublisher<[Balance], BittrexError> {
-        fetch(with: URLComponents(string: "https://api.bittrex.com/v3/balances")?.url, isSigned: true)
+        fetch(with: URLComponents(string: "https://\(domain)/v3/balances")?.url, isSigned: true)
     }
     
     func orders() -> AnyPublisher<[Order], BittrexError> {
-        fetch(with: URLComponents(string: "https://api.bittrex.com/v3/orders/closed")?.url, isSigned: true)
+        fetch(with: URLComponents(string: "https://\(domain)/v3/orders/closed")?.url, isSigned: true)
     }
 }
 

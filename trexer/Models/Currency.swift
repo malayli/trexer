@@ -11,17 +11,13 @@ struct Currency: Codable {
     let result: Result
     
     struct Result: Codable {
-        let bpi: BPI
-        
-        struct BPI: Codable {
-            let USD: USD
-            
-            struct USD: Codable {
-                enum CodingKeys: String, CodingKey {
-                    case rateFloat = "rate_float"
-                }
-                let rateFloat: Double
-            }
+        enum CodingKeys: String, CodingKey {
+            case bid = "Bid"
+            case ask = "Ask"
+            case last = "Last"
         }
+        let bid: Double
+        let ask: Double
+        let last: Double
     }
 }

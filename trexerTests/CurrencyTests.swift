@@ -20,7 +20,7 @@ final class CurrencyTests: XCTestCase {
     
     func testCurrencyDecoding() {
         let currency = try? JSONDecoder().decode(Currency.self, from: Parser.load("bitcoin.json"))
-        XCTAssertEqual(currency?.result.bpi.USD.rateFloat, 8998.974)
+        XCTAssertEqual(currency?.result.last, 9465.952)
     }
     
     func testCurrencyParsing() {
@@ -35,7 +35,7 @@ final class CurrencyTests: XCTestCase {
             }
             
         }) { (bitcoin) in
-            XCTAssertEqual(bitcoin.result.bpi.USD.rateFloat, 8998.974)
+            XCTAssertEqual(bitcoin.result.last, 9465.952)
         }
     }
 
