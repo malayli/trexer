@@ -76,8 +76,8 @@ final class MarketsTests: XCTestCase {
         }
         _ = viewModel.fetch {
             XCTAssertEqual(CurrencyViewModel(item: viewModel.currency!).value, 8998.974)
-            XCTAssertEqual(viewModel.dataSource.count, 433)
-            XCTAssertEqual(viewModel.dataSource.first?.id, "BTC-NPXS")
+            XCTAssertEqual(viewModel.dataSource.count, 441)
+            XCTAssertEqual(viewModel.dataSource.first?.id, "BTC-VID")
             expectation.fulfill()
         }
         
