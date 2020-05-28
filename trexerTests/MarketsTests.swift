@@ -19,12 +19,15 @@ final class MarketsTests: XCTestCase {
     }
     
     func testMarketsDecoding() {
-        guard let markets = try? JSONDecoder().decode(Markets.self, from: Parser.load("market.json")) else {
-            assertionFailure("testMarketsDecoding fails")
-            return
+        do {
+            let markets = try JSONDecoder().decode(Markets.self, from: Parser.load("market.json"))
+            XCTAssertEqual(markets.result.count, 441)
+            XCTAssertEqual(markets.result.first?.id, "BTC-HYC")
+            
+        } catch {
+            print(error)
+            assertionFailure("testMarketRowViewModel fails")
         }
-        XCTAssertEqual(markets.result.count, 184)
-        XCTAssertEqual(markets.result.first?.id, "BTC-RVN")
     }
     
     func testMarketsParsing() {
@@ -40,26 +43,32 @@ final class MarketsTests: XCTestCase {
             }
             
         }) { (marketsLits) in
-            XCTAssertEqual(marketsLits.result.count, 184)
-            XCTAssertEqual(marketsLits.result.first?.id, "BTC-RVN")
+            XCTAssertEqual(marketsLits.result.count, 441)
+            XCTAssertEqual(marketsLits.result.first?.id, "BTC-HYC")
         }
     }
     
     func testMarketRowViewModel() {
-        guard let markets = try? JSONDecoder().decode(Markets.self, from: Parser.load("market.json")) else {
+        do {
+            let markets = try JSONDecoder().decode(Markets.self, from: Parser.load("market.json"))
+            
+            let rowViewModel1 = MarketRowViewModel(item: markets.result[0])
+            XCTAssertEqual(rowViewModel1.id, "BTC-HYC")
+            
+            let rowViewModel2 = MarketRowViewModel(item: markets.result[1])
+            XCTAssertEqual(rowViewModel2.id, "ETH-ENG")
+            
+            XCTAssertNotEqual(rowViewModel1, rowViewModel2)
+            
+        } catch {
+            print(error)
             assertionFailure("testMarketRowViewModel fails")
-            return
         }
-        let rowViewModel1 = MarketRowViewModel(item: markets.result[0])
-        XCTAssertEqual(rowViewModel1.id, "BTC-RVN")
-        
-        let rowViewModel2 = MarketRowViewModel(item: markets.result[1])
-        XCTAssertEqual(rowViewModel2.id, "USD-ZEN")
-        
-        XCTAssertNotEqual(rowViewModel1, rowViewModel2)
     }
     
     func testMarketsViewModel() {
+        let expectation = XCTestExpectation(description: "testMarketsViewModel")
+        
         let container = DependenciesContainerMock()
         guard let viewModel: MarketsViewModel = container.resolve(MarketsViewModel.self) else {
             assertionFailure("testMarketsViewModel fails")
@@ -67,16 +76,11 @@ final class MarketsTests: XCTestCase {
         }
         _ = viewModel.fetch {
             XCTAssertEqual(CurrencyViewModel(item: viewModel.currency!).value, 8998.974)
-            XCTAssertEqual(viewModel.dataSource.count, 184)
-            XCTAssertEqual(viewModel.dataSource.first?.id, "BTC-GEO")
+            XCTAssertEqual(viewModel.dataSource.count, 433)
+            XCTAssertEqual(viewModel.dataSource.first?.id, "BTC-NPXS")
+            expectation.fulfill()
         }
-    }
-    
-    func testPerformanceMarketsListParsing() {
-        // MarketsData List Parsing performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-            testMarketsParsing()
-        }
+        
+        wait(for: [expectation], timeout: 10.0)
     }
 }

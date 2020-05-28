@@ -23,10 +23,7 @@ extension BalancesViewModel: BittrexProviding {
         provider.balances()
         .map {
             $0.filter {
-                if let value = Double($0.total) {
-                    return value > 0.0
-                }
-                return true
+                Double($0.total) ?? 0 > 0
             }.map(BalanceRowViewModel.init)
         }
         .receive(on: DispatchQueue.main)

@@ -9,17 +9,17 @@ import SwiftUI
 import Combine
 
 struct MarketRowViewModel {
-    private let item: Markets.MarketInfo
+    private let item: Markets.Summary
     private var disposables = Set<AnyCancellable>()
     
-    init(item: Markets.MarketInfo) {
+    init(item: Markets.Summary) {
         self.item = item
     }
 }
 
 extension MarketRowViewModel {
     var name: String {
-        item.summary.marketName
+        item.marketName
     }
     
     var currency: String {
@@ -37,33 +37,29 @@ extension MarketRowViewModel {
     }
     
     var baseVolume: Double {
-        item.summary.baseVolume
+        item.baseVolume ?? 0.0
     }
     
     var prevDay: Double {
-        item.summary.prevDay
+        item.prevDay ?? 0.0
     }
     
     var last: Double {
-        item.summary.last
+        item.last ?? 0.0
     }
     
     var logoURL: URL? {
-        URL(string: item.market.logoUrl)
-    }
-    
-    var rate: Double {
-        -(1 - (last / prevDay)) * 100.0
+        URL(string: "")
     }
     
     var rateText: Text {
-        Text((rate > 0 ? "+" : "") + String(format: "%.2f", rate) + "%").foregroundColor(rate < 0 ? .red : .green)
+        Text((item.rate > 0 ? "+" : "") + String(format: "%.2f", item.rate) + "%").foregroundColor(item.rate < 0 ? .red : .green)
     }
 }
 
 extension MarketRowViewModel: Identifiable {
     var id: String {
-        item.summary.marketName
+        item.marketName
     }
 }
 

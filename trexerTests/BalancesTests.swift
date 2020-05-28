@@ -51,6 +51,8 @@ final class BalancesTests: XCTestCase {
     }
     
     func testBalancesViewModel() {
+        let expectation = XCTestExpectation(description: "testBalancesViewModel")
+        
         let container = DependenciesContainerMock()
         guard let viewModel: BalancesViewModel = container.resolve(BalancesViewModel.self) else {
             assertionFailure("testBalancesDecoding fails")
@@ -59,6 +61,9 @@ final class BalancesTests: XCTestCase {
         _ = viewModel.fetch {
             XCTAssertEqual(viewModel.dataSource.count, 3)
             XCTAssertEqual(viewModel.dataSource.first?.id, "BTC")
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 10.0)
     }
 }

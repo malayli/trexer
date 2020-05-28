@@ -55,6 +55,8 @@ final class OrdersTests: XCTestCase {
     }
     
     func testOrdersViewModel() {
+        let expectation = XCTestExpectation(description: "testOrdersViewModel")
+        
         let container = DependenciesContainerMock()
         guard let viewModel: OrdersViewModel = container.resolve(OrdersViewModel.self) else {
             assertionFailure("testOrdersViewModel fails")
@@ -64,6 +66,9 @@ final class OrdersTests: XCTestCase {
             XCTAssertEqual(viewModel.dataSource.count, 3)
             XCTAssertEqual(viewModel.dataSource[0].name, "BTC-DGB")
             XCTAssertEqual(viewModel.dataSource[0].orderType, .buy)
+            expectation.fulfill()
         }
+        
+        wait(for: [expectation], timeout: 10.0)
     }
 }

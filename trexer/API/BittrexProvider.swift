@@ -76,7 +76,7 @@ extension BittrexProvider: BittrexFetching {
     }
     
     func markets() -> AnyPublisher<Markets, BittrexError> {
-        fetch(with: URLComponents(string: "\(domain)/api/v2.0/pub/Markets/GetMarketSummaries")?.url, apiVersion: .none)
+        fetch(with: URLComponents(string: "https://api.bittrex.com/api/v1.1/public/getmarketsummaries")?.url, apiVersion: .none)
     }
     
     func balances() -> AnyPublisher<[Balance], BittrexError> {
