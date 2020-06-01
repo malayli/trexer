@@ -7,6 +7,7 @@
 
 ## Description
 Trexer is a Bittrex Client on iOS using SwiftUI and Combine.
+Bittrex is a cryptocurrency exchange: https://global.bittrex.com
 
 ## Installation
 This app only uses Cocoapods to install `cocoapods-keys` that is used to store `Bittrex` `api key` and `secret key` in the Keychain. There are no other external dependencies.
